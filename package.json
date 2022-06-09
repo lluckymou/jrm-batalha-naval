@@ -1,0 +1,22 @@
+{
+  "name": "jrm-batalha-naval",
+  "version": "1.0.0",
+  "description": "Jogo de Batalha Naval para a disciplina JRM",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lluckymou/jrm-batalha-naval.git"
+  },
+  "author": "Lucas Moura & Marcos Martins",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lluckymou/jrm-batalha-naval/issues"
+  },
+  "homepage": "https://github.com/lluckymou/jrm-batalha-naval#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
