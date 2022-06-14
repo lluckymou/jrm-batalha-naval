@@ -53,6 +53,11 @@
     object-fit: cover;
 }
 
+.user.large {
+    width: 290px;
+    height: 200px;
+}
+
 .round-icon { border-color: darkcyan; }
 
 .user.active { border-color: green; }

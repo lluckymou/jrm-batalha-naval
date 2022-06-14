@@ -1,9 +1,4 @@
 $( document ).ready(function() {
-    // Random Photo
-    var countries = [ 'CR', 'CN', 'NU', 'NZ', 'NC', 'RS', 'UM', 'GE', 'SL', 'GI', 'PA', 'SC', 'VA', 'IO', 'JM', 'KW', 'BT', 'BN', 'AS', 'GD', 'IR', 'MD', 'BO', 'SG', 'UZ', 'PR', 'ID', 'IN', 'HK', 'EC', 'CI', 'QA', 'LT', 'GM', 'SCOTLAND', 'CU', 'KG', 'MU', 'MK', 'WF', 'FM', 'MT', 'BJ', 'CX', 'MG', 'CW', 'NL', 'ST', 'VN', 'AQ', 'ET', 'US', 'BF', 'DO', 'VC', 'PK', 'LA', 'IQ', 'EU', 'BY', 'VU', 'CH', 'TN', 'AW', 'KR', 'ES', 'NR', 'JO', 'KZ', 'WALES', 'SY', 'AR', 'BH', 'ME', 'PY', 'VE', 'PM', 'GQ', 'EA', 'DJ', 'CZ', 'MM', 'UG', 'CP', 'CL', 'PF', 'TA', 'KY', 'MC', 'ZM', 'TD', 'UN', 'CG', 'LY', 'JE', 'GS', 'ZW', 'SS', 'MY', 'TF', 'TJ', 'BG', 'GP', 'TV', 'AZ', 'KE', 'GL', 'VI', 'BD', 'LC', 'EE', 'CK', 'GG', 'PH', 'BV', 'SN', 'AX', 'AF', 'CC', 'GU', 'LR', 'GN', 'SI', 'HR', 'GY', 'MA', 'BE', 'SE', 'GT', 'MS', 'ENGLAND', 'IC', 'IM', 'KI', 'NE', 'ER', 'MP', 'LI', 'LV', 'TL', 'GH', 'BS', 'AU', 'FR', 'PN', 'MH', 'MZ', 'HN', 'BR', 'PS', 'RO', 'YE', 'PT', 'MN', 'AM', 'SA', 'TC', 'TO', 'MW', 'CY', 'NI', 'IT', 'BQ', 'GA', 'DG', 'BA', 'CM', 'TK', 'TT', 'SB', 'HT', 'TM', 'PE', 'MV', 'TG', 'TR', 'TZ', 'BM', 'XK', 'NF', 'MX', 'KN', 'CA', 'MQ', 'JP', 'AI', 'RE', 'AL', 'CV', 'TH', 'LU', 'DE', 'AT', 'UY', 'MR', 'GR', 'ML', 'OM', 'IE', 'SD', 'BZ', 'NA', 'PG', 'FJ', 'EH', 'NG', 'BL', 'KP', 'RW', 'KM', 'VG', 'CD', 'MO', 'IL', 'SH', 'DM', 'LS', 'NP', 'TW', 'IS', 'SR', 'FK', 'SK', 'ZA', 'LK', 'AC', 'SO', 'BB', 'SJ', 'SX', 'LB', 'SM', 'BW', 'AE', 'HU', 'AD', 'CF', 'SZ', 'AG', 'CO', 'NO', 'BI', 'FO', 'KH', 'AO', 'EG', 'DK', 'PW', 'PL', 'MF', 'SV', 'RU', 'FI', 'DZ', 'GW', 'GF', 'UA', 'GB', 'WS', 'HM', 'YT' ];
-    $("#player-profile-picture").attr('src', `nations/${countries[Math.floor(Math.random() * countries.length)]}.svg`);
-    $("#enemy-profile-picture").attr('src', `nations/${countries[Math.floor(Math.random() * countries.length)]}.svg`);
-
     // Setup Functions
     function createBoard(grid, squares) {
         for (let i = 0; i < 100; i++) {
@@ -24,7 +19,7 @@ $( document ).ready(function() {
     p1Grid.forEach(item => item.addEventListener('click', removeShip));
 
     function removeShip() {
-        if(gameStarted) return;
+        if(gameStarted || playerReady) return;
         if(!$(this).hasClass("taken")) return;
 
         var shipToRemove = $(this).attr('class').split(' ')[0];
@@ -55,36 +50,6 @@ $( document ).ready(function() {
         generateShips(p1Grid);
     });
 
-    $( "#confirm" ).click(function() { 
-        console.log("iniciou jogo");
-
-        var totalShipCount = 0;
-        for (let i = 0; i < p1Grid.length; i++)
-            if($(p1Grid[i]).hasClass("taken"))
-                totalShipCount++;
-
-        if(totalShipCount < 25) {
-            alert('Favor colocar todos os navios para confirmar participação');
-            return;
-        }
-
-        $( "#confirm" ).addClass("d-none");
-        $( "#inventory-container" ).addClass("d-none");
-        $( "#rh-player" ).removeClass("d-none");
-        
-        // Sets squares as clickable
-        $( p2Grid ).each(function(index) {
-            $(this).on("click", function(){
-                revealEnemySquare(this);
-            });
-        });
-
-        // Inicia o jogo com um turno
-        $("#log").text('Partida Iniciada');
-        gameStarted = true;
-        gameTurn();
-    });
-
     // Boat dragging and dropping
     var selectedName, draggedShip, draggedShipLength;
     var draggedLocations = [];
@@ -94,7 +59,7 @@ $( document ).ready(function() {
     ships.forEach(ship => ship.addEventListener('mousedown', (e) => {
         selectedName = e.target.id;
         console.log('Navio Selecionado: ' + selectedName);
-    }))
+    }));
 
     p1Grid.forEach(item => item.addEventListener('drop', dragDrop));
     p1Grid.forEach(item => item.addEventListener('dragover', dragOver));
@@ -158,3 +123,16 @@ $( document ).ready(function() {
         $(draggedShip).addClass("d-none");
     }
 });
+
+function startGame() {
+    // Sets squares as clickable
+    $( p2Grid ).each(function(index) {
+        $(this).on("click", function(){
+            shootEnemySquare(this);
+        });
+    });
+
+    // Inicia o jogo com um turno
+    gameStarted = true;
+    gameTurn();
+};

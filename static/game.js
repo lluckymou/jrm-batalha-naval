@@ -5,6 +5,7 @@ var damageTaken = 0, damageDealt = 0;
 var gameStarted = false, gameEnded = false;
 var p1FirstOneSunk = false, p1SecondOneSunk = false, p1ThirdOneSunk = false, p1FourthOneSunk = false, p1FirstTwoSunk = false, p1SecondTwoSunk = false, p1ThirdTwoSunk = false, p1FirstThreeSunk = false, p1SecondThreeSunk = false, p1FourSunk = false, p1FiveSunk = false; 
 var p2FirstOneSunk = false, p2SecondOneSunk = false, p2ThirdOneSunk = false, p2FourthOneSunk = false, p2FirstTwoSunk = false, p2SecondTwoSunk = false, p2ThirdTwoSunk = false, p2FirstThreeSunk = false, p2SecondThreeSunk = false, p2FourSunk = false, p2FiveSunk = false; 
+var enemyReady = false, playerReady = false;
 
 // Game Functions
 function gameTurn() {
@@ -22,34 +23,12 @@ function gameTurn() {
         $("#player-profile-picture").removeClass("active");
 
         $("#turn-player").text('Turno do Oponente');
-        setTimeout(randomShot, 750);
     }
 }
 
-function revealEnemySquare(square) {
-    if(gameEnded || currentPlayer != 'user') return;
-
-    if($(square).hasClass("hit") || $(square).hasClass("miss")) return;
-
-    if ($(square).hasClass('taken')) {
-        damageDealt++;
-        $(square).addClass('hit');
-        $("#log").text(`${who()} acertou o tiro`);
-        checkDamage($(square).attr('class').split(' ')[0]);
-    } else {
-        $(square).addClass('miss');
-        $("#log").text(`${who()} errou o tiro`);
-    }
-
-    if(gameEnded) return;
-
-    currentPlayer = 'enemy';
-    gameTurn();
-}
-
-function checkDamage(shipType) {
+function checkDamage(isUser, shipType, left) {
     // Checks for a new ship destroyed
-    isSunk((currentPlayer == 'user'), shipType);
+    isSunk(isUser, shipType, left);
 
     // Checks for game over
     if (damageDealt >= 25) {
@@ -69,15 +48,15 @@ function checkDamage(shipType) {
     {
         $("#enemy-profile-picture").removeClass("active");
         $("#player-profile-picture").removeClass("active");
-        $("#turn-player").text('Jogo encerrado');
+        $("#turn-player").text('Jogo encerrado. Recarregue a página para jogar novamente.');
     }
 }
 
 function who() { return currentPlayer == 'user' ? "Você": "O oponente" }
 
-function isSunk(isUser, ship) {
-    if($(`.${isUser ? 'player-2' : 'player-1'} .${ship}:not(.hit)`).length <= 0)
-    {        
+function isSunk(isUser, ship, left) {
+    if(left <= 0)
+    {
         var shipName = 'none';
 
         switch(ship) {
