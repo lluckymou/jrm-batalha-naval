@@ -7,7 +7,7 @@ const http = require('http');
 
 const app = express();
 const server = http.createServer(app);
-const port = process.env.PORT || 25565;
+const port = process.env.PORT || 8080;
 const io = socketio(server);
 
 // Static folder
@@ -179,9 +179,9 @@ io.on('connection', socket => {
         // Aqui seria legal verificar de quem é o turno para evitar cheats, mas como segurança é opcional, não faremos :)
 
         socket.broadcast.emit('reveal-check', data);
-    })
+    });
 
     socket.on('reveal-confirm', data => {
         io.emit('reveal', data);
-    })
+    });
 });
