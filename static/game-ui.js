@@ -101,7 +101,8 @@ $( document ).ready(function() {
 
             if(localCoordinate < 0
             || draggedLocations.includes(localCoordinate)
-            || localCoordinate % 10 < coordinate % 10) 
+            || localCoordinate % 10 < coordinate % 10
+            || localCoordinate > 99) 
                 fail = true;
 
             if(fail)

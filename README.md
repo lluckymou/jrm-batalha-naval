@@ -12,5 +12,5 @@ npm install
 
 Execute o servidor com o comando
 ```sh
-node index.js
+npm start
 ```
