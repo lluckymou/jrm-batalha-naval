@@ -14,3 +14,7 @@ Execute o servidor com o comando
 ```sh
 npm start
 ```
+
+## App no Heroku:
+É possivel testar o jogo atraves do heroku pelo link:
+https://jrm-batalha-naval.herokuapp.com/
